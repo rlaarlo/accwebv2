@@ -14,7 +14,7 @@ auth:
   read_only_password: ro
   timeout: 5h
 acc:
-  server_path: "/app/fake-accserver/build/osx"
+  server_path: "./server"
   server_exe: accServer.exe
 
 config_path: config/

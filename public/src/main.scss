@@ -1,356 +1,947 @@
-$dark_gray: #171a21;
-$gray: #c7d5e0;
-$light_gray: #f2f2f2;
-$dark_red: #7e1313;
-$red: #d85d5d;
-$green: #a4d007;
-$dark_green: #4c6b22;
-$dark_blue: #1b2838;
-$medium_blue: #233D51;
-$light_blue: #67c1f5;
-$background: $dark_blue;
+// ============================================================
+//  ACCWeb - Modern UI Theme
+//  Drop-in replacement for the original Steam-inspired theme.
+//  All original class names are preserved so every Vue
+//  component keeps working without modification.
+// ============================================================
 
-$font_size: 14px;
-$font_size_small: 12px;
-$font_family: sans-serif;
-$font_color: $gray;
+// ---------- Color palette ----------
+$bg-0:           #0b0f1a;   // page background
+$bg-1:           #121826;   // cards / panels
+$bg-2:           #1a2333;   // raised surfaces
+$bg-3:           #243045;   // hover / borders
+
+$text-1:         #e6ecf5;   // primary text
+$text-2:         #a3b1c6;   // secondary text
+$text-3:         #6c7a93;   // muted text
+
+$accent:         #ff2e4d;   // ACC red primary
+$accent-hover:   #ff4d68;
+$accent-soft:    rgba(255, 46, 77, 0.12);
+
+$info:           #38bdf8;   // cyan accent
+$info-soft:      rgba(56, 189, 248, 0.12);
+
+$success:        #22c55e;
+$success-soft:   rgba(34, 197, 94, 0.14);
+$success-text:   #4ade80;
+
+$danger:         #ef4444;
+$danger-soft:    rgba(239, 68, 68, 0.14);
+$danger-text:    #f87171;
+
+$warning:        #f59e0b;
+$warning-soft:   rgba(245, 158, 11, 0.14);
+
+$border:         rgba(255, 255, 255, 0.08);
+$border-strong:  rgba(255, 255, 255, 0.14);
+
+// Backward-compat variables (kept in case referenced elsewhere)
+$dark_gray:      $bg-1;
+$gray:           $text-2;
+$light_gray:     $text-1;
+$dark_red:       $danger-soft;
+$red:            $danger-text;
+$green:          $success-text;
+$dark_green:     $success-soft;
+$dark_blue:      $bg-0;
+$medium_blue:    $bg-3;
+$light_blue:     $info;
+$background:     $bg-0;
+
+// ---------- Typography ----------
+$font-family:    'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+$font-mono:      'JetBrains Mono', 'Fira Code', Consolas, monospace;
+$font-size:      14px;
+$font-size-sm:   12px;
+$font-size-lg:   16px;
+$font-color:     $text-1;
+
+// ---------- Radius / shadow ----------
+$radius-sm:      6px;
+$radius:         10px;
+$radius-lg:      14px;
+
+$shadow-sm:      0 1px 2px rgba(0, 0, 0, 0.25);
+$shadow:         0 8px 24px rgba(0, 0, 0, 0.35);
+$shadow-lg:      0 20px 48px rgba(0, 0, 0, 0.45);
+
+$transition:     150ms cubic-bezier(0.4, 0, 0.2, 1);
+
+// ============================================================
+//  Base
+// ============================================================
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
 html,
 body {
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	font-size: $font_size;
-	font-family: $font_family;
-	color: $font_color;
-	line-height: 1;
-	background: $background;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: $font-size;
+    font-family: $font-family;
+    color: $font-color;
+    line-height: 1.45;
+    background: $bg-0;
+    background-image:
+        radial-gradient(1200px 600px at 10% -10%, rgba(56, 189, 248, 0.06), transparent 60%),
+        radial-gradient(900px 500px at 110% 10%, rgba(255, 46, 77, 0.06), transparent 60%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 html {
-	margin-right: calc(-100vw + 100%);
-	/* Fix for scroll-bar jump */
+    margin-right: calc(-100vw + 100%); // prevent scrollbar jump
 }
 
 body {
-	overflow-x: hidden;
+    overflow-x: hidden;
 }
 
+::selection {
+    background: $accent-soft;
+    color: $text-1;
+}
+
+// Scrollbar
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: $bg-0;
+}
+::-webkit-scrollbar-thumb {
+    background: $bg-3;
+    border-radius: 8px;
+    border: 2px solid $bg-0;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: lighten(#243045, 8%);
+}
+
+// ============================================================
+//  Logo / header
+// ============================================================
 .logo {
-	float: left;
-	margin: 0 6px 0 0;
-	max-height: 40px;
+    float: left;
+    margin: 0 12px 0 0;
+    max-height: 40px;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
 
+// ============================================================
+//  Main layout card
+// ============================================================
 .main {
-	max-width: 900px;
-	margin: 40px auto;
-	padding: 20px;
-	background: $dark-gray;
-	border: 1px solid $medium_blue;
-	border-radius: 8px;
+    max-width: 1100px;
+    margin: 32px auto;
+    padding: 28px 32px;
+    background: linear-gradient(180deg, $bg-1 0%, darken(#121826, 1%) 100%);
+    border: 1px solid $border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow;
+    animation: fade-in 250ms ease-out;
 
-	.title {
-		display: flex;
-		justify-content: space-between;
-		margin: 0 0 20px 0;
+    .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 24px 0;
+        padding-bottom: 18px;
+        border-bottom: 1px solid $border;
 
-		.menu {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 40px;
+        .menu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
 
-			button {
-				margin: 0 2px;
-			}
-		}
-	}
+            button {
+                margin: 0;
+            }
+        }
+    }
 
-	.server {
-		display: flex;
-		justify-content: space-between;
-		margin: 10px 0;
-		padding: 10px;
-		border: 1px solid $gray;
-		border-radius: 1px;
+    // ------------- Server card -------------
+    .server {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin: 12px 0;
+        padding: 16px 18px;
+        background: $bg-2;
+        border: 1px solid $border;
+        border-radius: $radius;
+        transition: border-color $transition, transform $transition, box-shadow $transition;
 
-		.name {
-			font-size: medium;
-			font-weight: bold;
-			margin: 0 0 15px 0;
+        &:hover {
+            border-color: $border-strong;
+            transform: translateY(-1px);
+            box-shadow: $shadow-sm;
+        }
 
-			.fas {
-				margin: 0 4px;
-				cursor: pointer;
-			}
-		}
+        .name {
+            font-size: $font-size-lg;
+            font-weight: 600;
+            color: $text-1;
+            margin: 0 0 8px 0;
 
-		.info {
-			color: $gray;
-		}
+            .fas {
+                margin: 0 6px;
+                cursor: pointer;
+                color: $text-3;
+                transition: color $transition;
 
-		.start {
-			background: $dark-green;
-			color: $green;
-		}
+                &:hover { color: $info; }
+            }
+        }
 
-		.stop {
-			background: $dark-red;
-			color: $red;
-		}
+        .info {
+            color: $text-2;
+            font-size: $font-size-sm;
+        }
 
-		.online {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			padding: 6px 10px;
-			background: $dark-green;
-			color: $green;
-		}
+        .start {
+            background: $success-soft;
+            color: $success-text;
 
-		.offline {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			padding: 6px 10px;
-			background: $dark-red;
-			color: $light_gray;
-		}
-	}
+            &:hover { background: rgba(34, 197, 94, 0.22); }
+        }
+
+        .stop {
+            background: $danger-soft;
+            color: $danger-text;
+
+            &:hover { background: rgba(239, 68, 68, 0.22); }
+        }
+
+        .online {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: $success-soft;
+            color: $success-text;
+            border-radius: 999px;
+            font-size: $font-size-sm;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+
+            &::before {
+                content: "";
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: $success-text;
+                box-shadow: 0 0 8px $success-text;
+                animation: pulse 1.6s ease-in-out infinite;
+            }
+        }
+
+        .offline {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: $text-3;
+            border-radius: 999px;
+            font-size: $font-size-sm;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+
+            &::before {
+                content: "";
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: $text-3;
+            }
+        }
+    }
 }
 
 .main-small {
-	max-width: 450px;
+    max-width: 460px;
+    padding: 32px;
 }
 
 .end {
-	font-size: $font_size_small;
-	text-align: center;
-	margin: 20px 0 0 0;
+    font-size: $font-size-sm;
+    color: $text-3;
+    margin: 32px 0 0;
+    padding: 18px 4px 4px;
+    border-top: 1px solid $border;
+
+    .end-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px 24px;
+    }
+
+    .end-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: $text-2;
+
+        .fa-flag-checkered {
+            color: $accent;
+            font-size: 14px;
+        }
+    }
+
+    .end-brand-name {
+        font-weight: 700;
+        color: $text-1;
+        letter-spacing: 0.2px;
+    }
+
+    .end-version {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: $info-soft;
+        color: $info;
+        font-family: $font-mono;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .end-commit {
+        font-family: $font-mono;
+        font-size: 11px;
+        color: $text-3;
+        opacity: 0.8;
+    }
+
+    .end-links {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 6px;
+
+        a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: $radius-sm;
+            color: $text-2;
+            transition: background $transition, color $transition;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.05);
+                color: $text-1;
+                text-decoration: none;
+            }
+
+            .fab, .fas { font-size: 13px; }
+        }
+    }
+
+    .end-meta {
+        margin-top: 10px;
+        text-align: center;
+        color: $text-3;
+
+        .fa-heart {
+            color: $accent;
+            margin: 0 2px;
+            animation: pulse 1.8s ease-in-out infinite;
+        }
+
+        a { color: $text-3; }
+        a:hover { color: $info; }
+    }
 }
 
+@media (max-width: 600px) {
+    .end .end-row { justify-content: center; text-align: center; }
+    .end .end-brand { width: 100%; justify-content: center; }
+    .end .end-links { justify-content: center; }
+}
+
+// ============================================================
+//  Tabs
+// ============================================================
 .tabs {
-	display: flex;
-	margin: 0 0 20px 0;
-	border-style: solid;
-	border-color: $dark_green;
-	border-width: 0 0 1px 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 24px 0;
+    gap: 4px;
+    border-bottom: 1px solid $border;
 
-	.tab {
-		padding: 10px 12px;
-		margin: 0 2px 0 0;
-		border-radius: 2px 2px 0 0;
-		cursor: pointer;
-	}
+    .tab {
+        padding: 10px 16px;
+        margin: 0;
+        border-radius: $radius-sm $radius-sm 0 0;
+        cursor: pointer;
+        color: $text-2;
+        font-weight: 500;
+        transition: color $transition, background $transition;
+        position: relative;
 
-	.tab-active {
-		background: $dark_green;
-		color: $green;
-	}
+        &:hover {
+            color: $text-1;
+            background: rgba(255, 255, 255, 0.03);
+        }
+    }
+
+    .tab-active {
+        background: transparent;
+        color: $accent;
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: -1px;
+            height: 2px;
+            background: $accent;
+            border-radius: 2px 2px 0 0;
+        }
+    }
 }
 
+// ============================================================
+//  Collapsible
+// ============================================================
 .collapsible {
-	margin: 10px 0;
+    margin: 12px 0;
+    background: $bg-2;
+    border: 1px solid $border;
+    border-radius: $radius;
+    overflow: hidden;
+    transition: border-color $transition;
 
-	.collapsible-title {
-		display: flex;
-		justify-content: space-between;
-		border-style: solid;
-		border-color: $medium_blue;
-		border-width: 0 0 1px 0;
-		padding: 10px 6px;
+    &:hover { border-color: $border-strong; }
 
-		.collapse-icon {
-			cursor: pointer;
-		}
-	}
+    .collapsible-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 0;
+        padding: 14px 18px;
+        font-weight: 600;
+        color: $text-1;
 
-	.collapsible-content {
-		padding: 20px 6px 6px 6px;
-	}
+        .collapse-icon {
+            cursor: pointer;
+            color: $text-3;
+            transition: color $transition, transform $transition;
+
+            &:hover { color: $info; }
+        }
+    }
+
+    .collapsible-content {
+        padding: 8px 18px 18px;
+        border-top: 1px solid $border;
+    }
 }
 
+// ============================================================
+//  Box
+// ============================================================
 .box {
-	border: 1px solid $gray;
-	border-radius: 1px;
-	padding: 20px;
-	margin: 10px 0;
+    background: $bg-2;
+    border: 1px solid $border;
+    border-radius: $radius;
+    padding: 20px;
+    margin: 12px 0;
 
-	&.condensed {
-		padding: 5px 20px;
-	}
+    &.condensed {
+        padding: 10px 20px;
+    }
 }
 
-
-.error-toast {
-	position: absolute;
-	left: 50%;
-	top: 20px;
-
-	.error-content {
-		position: relative;
-		left: -50%;
-		border-radius: 1px;
-		background: $red;
-		color: $dark_gray;
-		padding: 10px;
-	}
-}
-
+// ============================================================
+//  Toasts
+// ============================================================
+.error-toast,
 .success-toast {
-	position: absolute;
-	left: 50%;
-	top: 20px;
+    position: fixed;
+    left: 50%;
+    top: 24px;
+    transform: translateX(-50%);
+    z-index: 1000;
+    animation: slide-down 250ms ease-out;
 
-	.success-content {
-		position: relative;
-		left: -50%;
-		border-radius: 1px;
-		background: $green;
-		color: $dark_gray;
-		padding: 10px;
-	}
+    .error-content,
+    .success-content {
+        border-radius: $radius;
+        padding: 12px 18px;
+        font-weight: 500;
+        box-shadow: $shadow;
+        backdrop-filter: blur(8px);
+        position: static;
+        left: auto;
+    }
 }
 
+.error-toast .error-content {
+    background: rgba(239, 68, 68, 0.95);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.success-toast .success-content {
+    background: rgba(34, 197, 94, 0.95);
+    color: #06210f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// ============================================================
+//  Typography
+// ============================================================
 h1 {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 40px;
-	font-size: 20px;
-	font-weight: normal;
-	margin: 0 0 0 6px;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    font-size: 22px;
+    font-weight: 600;
+    color: $text-1;
+    margin: 0;
+    letter-spacing: -0.2px;
 }
 
+h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: $text-1;
+    margin: 18px 0 12px;
+}
+
+h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: $text-2;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin: 14px 0 8px;
+}
+
+// ============================================================
+//  Buttons
+// ============================================================
 button,
 input[type~="submit"] {
-	width: auto;
-	border-width: 0;
-	font-size: $font_size;
-	font-family: $font_family;
-	background: $medium_blue;
-	color: $light_blue;
-	border-radius: 2px;
-	padding: 8px 12px;
-	margin: 4px 0;
-	cursor: pointer;
+    width: auto;
+    border: 1px solid transparent;
+    font-size: $font-size;
+    font-family: $font-family;
+    font-weight: 500;
+    background: $bg-3;
+    color: $text-1;
+    border-radius: $radius-sm;
+    padding: 9px 16px;
+    margin: 4px 0;
+    cursor: pointer;
+    transition: background $transition, color $transition, transform $transition, box-shadow $transition, border-color $transition;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    line-height: 1;
 
-	.fas {
-		margin-right: 6px;
-	}
+    &:hover:not(:disabled):not(.disabled) {
+        background: lighten(#243045, 6%);
+        transform: translateY(-1px);
+        box-shadow: $shadow-sm;
+    }
+
+    &:active:not(:disabled):not(.disabled) {
+        transform: translateY(0);
+    }
+
+    &:focus-visible {
+        outline: 2px solid $info;
+        outline-offset: 2px;
+    }
+
+    .fas {
+        margin-right: 0;
+    }
 }
 
+// ============================================================
+//  Form controls
+// ============================================================
 input,
 select,
 textarea {
-	width: 100%;
-	box-sizing: border-box;
-	font-size: $font_size;
-	font-family: $font_family;
-	background: $dark_blue;
-	color: $light_gray;
-	border: 1px solid $medium_blue;
-	border-radius: 1px;
-	padding: 6px;
-	margin: 4px 0;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: $font-size;
+    font-family: $font-family;
+    background: $bg-0;
+    color: $text-1;
+    border: 1px solid $border-strong;
+    border-radius: $radius-sm;
+    padding: 9px 12px;
+    margin: 4px 0;
+    transition: border-color $transition, box-shadow $transition, background $transition;
+
+    &::placeholder { color: $text-3; }
+
+    &:hover:not(:disabled) {
+        border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: $info;
+        box-shadow: 0 0 0 3px $info-soft;
+        background: $bg-1;
+    }
+}
+
+textarea {
+    min-height: 120px;
+    font-family: $font-mono;
+    line-height: 1.5;
+    resize: vertical;
 }
 
 input[type~="checkbox"] {
-	width: auto;
-	margin: 0 8px 0 0;
+    width: 18px;
+    height: 18px;
+    margin: 0 10px 0 0;
+    accent-color: $accent;
+    cursor: pointer;
 }
 
-input[disabled="disabled"] {
-	background-color: $dark_gray;
-	border-color: $gray;
+input[disabled="disabled"],
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-color: $border;
+    color: $text-3;
+    cursor: not-allowed;
 }
 
 .checkbox {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 30px;
+    display: flex;
+    align-items: center;
+    height: 32px;
 
-	label {
-		font-size: $font_size;
-	}
+    label {
+        font-size: $font-size;
+        cursor: pointer;
+    }
 }
 
 select {
-	width: auto;
-	display: block;
+    width: auto;
+    display: block;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a3b1c6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 32px;
 }
 
 label {
-	width: 100%;
-	box-sizing: border-box;
-	font-size: $font_size_small;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    font-size: $font-size-sm;
+    color: $text-2;
+    margin-bottom: 2px;
+    font-weight: 500;
 }
 
+// ============================================================
+//  Button variants
+// ============================================================
 .primary {
-	background: $dark_green !important;
-	color: $green !important;
+    background: $accent !important;
+    color: #fff !important;
+    border-color: transparent !important;
+
+    &:hover:not(:disabled):not(.disabled) {
+        background: $accent-hover !important;
+        box-shadow: 0 6px 16px rgba(255, 46, 77, 0.35) !important;
+    }
 }
 
 .danger {
-	background: $dark_red !important;
-	color: $gray !important;
+    background: $danger !important;
+    color: #fff !important;
+    border-color: transparent !important;
+
+    &:hover:not(:disabled):not(.disabled) {
+        background: lighten(#ef4444, 5%) !important;
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35) !important;
+    }
 }
 
 .disabled {
-	background: $gray !important;
-	color: $dark_gray !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    color: $text-3 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
 .error {
-	color: $red;
-	width: 100%;
-	box-sizing: border-box;
-	font-size: $font_size_small;
+    color: $danger-text;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: $font-size-sm;
+    margin-top: 4px;
 }
 
 a {
-	color: $light_blue;
-	text-decoration: none;
+    color: $info;
+    text-decoration: none;
+    transition: color $transition;
+
+    &:hover { color: lighten(#38bdf8, 8%); text-decoration: underline; }
 }
 
-.button-row>button {
-	margin-right: 8px;
+// ============================================================
+//  Button row
+// ============================================================
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+
+    > button {
+        margin: 0;
+    }
 }
 
+// ============================================================
+//  Server settings grid
+// ============================================================
 .server-settings-container {
-	display: grid;
-	grid-gap: 2.0rem;
-	margin-bottom: 1.0rem;
+    display: grid;
+    gap: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .server-settings-group {
-	margin: 1.0rem 0;
+    margin: 1.25rem 0;
+    padding: 16px 18px;
+    background: $bg-2;
+    border: 1px solid $border;
+    border-radius: $radius;
 }
 
-.server-settings-container.two-columns {
-	grid-template-columns: 1fr 1fr;
+.server-settings-container.two-columns    { grid-template-columns: repeat(2, 1fr); }
+.server-settings-container.three-columns  { grid-template-columns: repeat(3, 1fr); }
+.server-settings-container.four-columns   { grid-template-columns: repeat(4, 1fr); }
+.server-settings-container.one-two-columns   { grid-template-columns: 1fr 2fr; }
+.server-settings-container.one-three-columns { grid-template-columns: 1fr 3fr; }
+
+// ============================================================
+//  Wizard
+// ============================================================
+.wizard-stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 8px 0 28px;
+    padding: 18px 6px;
+    background: $bg-2;
+    border: 1px solid $border;
+    border-radius: $radius;
+    overflow-x: auto;
+    scrollbar-width: thin;
 }
 
-.server-settings-container.three-columns {
-	grid-template-columns: 1fr 1fr 1fr;
+.wizard-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 1 0;
+    min-width: 120px;
+    padding: 6px 10px;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    color: $text-3;
+    transition: color $transition;
+
+    &:not(:last-child)::after {
+        content: "";
+        flex: 1;
+        height: 2px;
+        background: $border;
+        margin: 0 6px 0 4px;
+        border-radius: 2px;
+        transition: background $transition;
+    }
+
+    &:hover { color: $text-1; }
+
+    &.done {
+        color: $success-text;
+
+        &::after { background: $success-text; }
+
+        .wizard-step-bullet {
+            background: $success-soft;
+            color: $success-text;
+            border-color: transparent;
+        }
+    }
+
+    &.active {
+        color: $accent;
+
+        .wizard-step-bullet {
+            background: $accent;
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 0 0 4px $accent-soft;
+        }
+
+        .wizard-step-label { color: $text-1; font-weight: 600; }
+    }
 }
 
-.server-settings-container.four-columns {
-	grid-template-columns: 1fr 1fr 1fr 1fr;
+.wizard-step-bullet {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid $border-strong;
+    background: $bg-1;
+    color: $text-3;
+    font-weight: 600;
+    font-size: $font-size-sm;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background $transition, color $transition, box-shadow $transition;
 }
 
-.server-settings-container.one-two-columns {
-	grid-template-columns: 1fr 2fr;
+.wizard-step-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: $font-size-sm;
+    white-space: nowrap;
+
+    .fas { font-size: 12px; opacity: 0.85; }
 }
 
-.server-settings-container.one-three-columns {
-	grid-template-columns: 1fr 3fr;
+.wizard-content {
+    animation: fade-in 200ms ease-out;
+
+    > h2 {
+        margin-top: 0;
+    }
 }
 
-@media (max-device-width: 700px) {
-	.main {
-		margin: 0 auto;
-	}
+.wizard-hint {
+    color: $text-2;
+    font-size: $font-size-sm;
+    margin: -4px 0 18px;
+}
+
+.wizard-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid $border;
+
+    .wizard-nav-meta {
+        color: $text-3;
+        font-size: $font-size-sm;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .wizard-nav-right {
+        display: flex;
+        gap: 8px;
+    }
+
+    button { margin: 0; }
+}
+
+@media (max-width: 700px) {
+    .wizard-stepper { padding: 14px 4px; }
+    .wizard-step { min-width: 90px; }
+    .wizard-step-label span { display: none; }
+    .wizard-nav { flex-wrap: wrap; }
+    .wizard-nav .wizard-nav-meta { order: -1; width: 100%; text-align: center; }
+}
+
+// ============================================================
+//  Animations
+// ============================================================
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+    from { opacity: 0; transform: translate(-50%, -10px); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.55; transform: scale(0.85); }
+}
+
+// ============================================================
+//  Responsive
+// ============================================================
+@media (max-width: 900px) {
+    .main {
+        margin: 12px;
+        padding: 20px 18px;
+    }
+
+    .server-settings-container.two-columns,
+    .server-settings-container.three-columns,
+    .server-settings-container.four-columns,
+    .server-settings-container.one-two-columns,
+    .server-settings-container.one-three-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .main .server {
+        flex-wrap: wrap;
+    }
+
+    h1 { font-size: 18px; }
+}
+
+@media (max-width: 480px) {
+    .main {
+        margin: 0;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        padding: 16px 14px;
+    }
+
+    button, input[type~="submit"] { padding: 10px 14px; }
 }

@@ -1,4 +1,19 @@
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const webpack = require('webpack');
+const { execSync } = require('child_process');
+
+function safeGit(cmd, fallback) {
+	try {
+		return execSync(cmd, { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+	} catch (e) {
+		return fallback;
+	}
+}
+
+const APP_VERSION = process.env.APP_VERSION
+	|| safeGit('git describe --tags --abbrev=0', 'dev');
+const APP_COMMIT = process.env.APP_COMMIT
+	|| safeGit('git rev-parse --short HEAD', 'unknown');
 
 module.exports = {
 	mode: 'development',
@@ -52,6 +67,10 @@ module.exports = {
 		poll: true
 	},
 	plugins: [
-		new VueLoaderPlugin()
+		new VueLoaderPlugin(),
+		new webpack.DefinePlugin({
+			__APP_VERSION__: JSON.stringify(APP_VERSION),
+			__APP_COMMIT__:  JSON.stringify(APP_COMMIT)
+		})
 	]
 }

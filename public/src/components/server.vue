@@ -23,12 +23,16 @@
                 <b>{{$t("track")}}:</b> {{server.track}}
                 <span v-if="!ro">&nbsp;&bull;&nbsp; <b>{{$t("configuration_directory")}}:</b> {{server.id}}</span>
             </div>
-            <div class="info state" v-if="server.pid">
-                <b>{{$t("state")}}: </b>{{$t(server.serverState)}} &nbsp;&bull;&nbsp;
-                <b>{{$t("number_of_drivers")}}: </b>{{formattedServerClientCount}} &nbsp;&bull;&nbsp;
+            <div class="info state">
+                <b>{{$t("state")}}: </b>
+                <span v-if="server.pid">{{$t(server.serverState)}}</span>
+                <span v-else>{{$t("offline")}}</span>
+                &nbsp;&bull;&nbsp;
+                <b>{{$t("number_of_drivers")}}: </b>{{server.pid ? formattedServerClientCount : '-'}} &nbsp;&bull;&nbsp;
                 <b>{{$t("session")}}: </b>
-                <span v-if="server.sessionType">{{server.sessionType}} ({{server.sessionPhase}}) - {{server.sessionRemaining}} min(s)</span>
-                <span v-else>{{$t('not_detected')}}</span>
+                <span v-if="server.pid && server.sessionType">{{server.sessionType}} ({{server.sessionPhase}}) - {{server.sessionRemaining}} min(s)</span>
+                <span v-else-if="server.pid">{{$t('not_detected')}}</span>
+                <span v-else>-</span>
             </div>
         </div>
         <button class="start" v-on:click="start" v-if="is_mod && !ro && !server.pid">{{$t("start_server")}}</button>
@@ -38,27 +42,58 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .content {
     width: 100%;
+    min-width: 0;
+}
+
+.info {
+    color: #a3b1c6;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.info b {
+    color: #e6ecf5;
+    font-weight: 600;
 }
 
 .state {
-    margin-top: 10px;
+    margin-top: 8px;
+    padding: 8px 10px;
+    background: rgba(56, 189, 248, 0.06);
+    border-left: 3px solid #38bdf8;
+    border-radius: 6px;
 }
 
 .state b {
-    color: #505050;
+    color: #38bdf8;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.4px;
 }
 
 .running {
-    background-color: #1d2331;
+    border-color: rgba(74, 222, 128, 0.35) !important;
+    box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.18), 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .actions {
-    display: inline;
+    display: inline-flex;
+    gap: 12px;
     float: right;
-    margin-right: 30px;
+    margin-right: 4px;
+}
+
+.actions .fas {
+    cursor: pointer;
+    color: #6c7a93;
+    transition: color 150ms ease;
+}
+
+.actions .fas:hover {
+    color: #38bdf8;
 }
 </style>
 
