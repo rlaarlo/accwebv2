@@ -17,8 +17,8 @@ auth:
   read_only_password: $ACCWEB_RO_PASSWORD
 
 acc:
-  server_path: "$ACCWEB_SERVER_PATH"
-  server_exe: $ACCWEB_SERVER_EXE
+  server_path: "/accserver"
+  server_exe: accServer.exe
   
 config_path: config/
 dev: false
